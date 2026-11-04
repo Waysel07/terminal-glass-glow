@@ -2,6 +2,8 @@
 
 A glass theme for Windows Terminal: a blurred, see-through background, a faint glow around text, and the [Obel Mono](https://typographic.systems/obel-mono) font.
 
+![Windows Terminal with the Glass Glow theme, showing colourful shapes blurred through the background and a masked GitHub token](screenshot.png)
+
 Setup is manual and takes about five minutes. It runs no scripts and doesn't need admin rights.
 
 ## 1. Install the font
