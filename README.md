@@ -2,25 +2,92 @@
 
 A glass theme for Windows Terminal: a blurred, see-through background, a faint glow around text, and the [Obel Mono](https://typographic.systems/obel-mono) font.
 
-## Install
+Setup is manual and takes about five minutes. It runs no scripts and doesn't need admin rights.
 
-You need Windows Terminal, opened at least once. Admin rights aren't required.
+## 1. Install the font
 
-```powershell
-gh repo clone Waysel07/terminal-glass-glow
-cd terminal-glass-glow
-powershell -ExecutionPolicy Bypass -File .\install.ps1
+1. Download [the Obel Mono TTF zip](https://typographic.systems/download/ObelMono-1.000-ttf.zip) and extract it.
+2. Open the `variable` folder and select both `.ttf` files.
+3. Right-click them and choose **Install**, not "Install for all users".
+
+## 2. Add the glow shader
+
+1. Open [`glass-glow.hlsl`](glass-glow.hlsl) and copy its contents.
+2. Paste into Notepad and choose **Save as**.
+3. Set "Save as type" to **All files** and save it as `C:\Users\YOUR_USERNAME\glass-glow.hlsl`.
+
+## 3. Update Terminal's settings
+
+In Windows Terminal, press `Ctrl+Shift+,` to open `settings.json`. Save a copy of it somewhere first, so you can undo this.
+
+**Replace** the `"defaults": {},` line under `"profiles"` with the block below, and change `YOUR_USERNAME` to your Windows username. If your `defaults` already has settings, keep them alongside these.
+
+```json
+"defaults": {
+    "colorScheme": "Glass Glow",
+    "cursorShape": "filledBox",
+    "experimental.pixelShaderPath": "C:\\Users\\YOUR_USERNAME\\glass-glow.hlsl",
+    "opacity": 40,
+    "padding": "14",
+    "useAcrylic": true,
+    "font": {
+        "face": "Obel Mono",
+        "size": 12,
+        "features": { "ss01": 1 }
+    }
+},
 ```
 
-Then close all Terminal windows and reopen them.
+**Replace** the `"schemes": []` and `"themes": []` lines at the bottom of the file with this block. If you already have your own schemes or themes, add these entries to those lists instead, and add the `"theme"` line separately.
 
-The installer:
+```json
+"schemes": [
+    {
+        "name": "Glass Glow",
+        "background": "#080C18",
+        "foreground": "#DDE8FF",
+        "cursorColor": "#7DF9FF",
+        "selectionBackground": "#3A5A8C",
+        "black": "#1B2233",
+        "red": "#FF5C8A",
+        "green": "#5CFFB1",
+        "yellow": "#FFD76B",
+        "blue": "#5CA8FF",
+        "purple": "#B98CFF",
+        "cyan": "#5CF2FF",
+        "white": "#C9D6F0",
+        "brightBlack": "#5E6C8C",
+        "brightRed": "#FF8FB0",
+        "brightGreen": "#8CFFCB",
+        "brightYellow": "#FFE699",
+        "brightBlue": "#8CC4FF",
+        "brightPurple": "#D2B3FF",
+        "brightCyan": "#9CF8FF",
+        "brightWhite": "#FFFFFF"
+    }
+],
+"theme": "Glass",
+"themes": [
+    {
+        "name": "Glass",
+        "window": { "applicationTheme": "dark", "useMica": false },
+        "tabRow": { "background": "#080C1899", "unfocusedBackground": "#080C1899" },
+        "tab": {
+            "background": "#080C1866",
+            "unfocusedBackground": "#00000000",
+            "showCloseButton": "hover"
+        }
+    }
+]
+```
 
-- downloads Obel Mono from typographic.systems and installs it for your user account
-- backs up `settings.json` next to the original as `settings.json.glass-backup-<timestamp>`
-- adds the theme to your existing settings and keeps your keybindings and profiles
+Save the file, then close all Terminal windows and reopen them. If Terminal shows a settings error, it's usually a missing comma around the pasted blocks.
 
-Comments in `settings.json` are lost when the installer rewrites it; the backup keeps them. Settings on an individual profile, such as its own font or opacity, override the theme for that profile.
+## If something is blocked
+
+- **Font won't install:** change `"face"` to `"Cascadia Mono"`, which comes with Terminal. You'll lose secret masking and Obel Mono's look.
+- **No transparency:** turn on Settings > Personalization > Colors > Transparency effects. Some companies lock this setting.
+- **Shader error or no glow:** delete the `experimental.pixelShaderPath` line. Everything else still works.
 
 ## Secret masking
 
@@ -34,10 +101,8 @@ The config turns on Obel Mono's `ss01` feature, which shows API keys and similar
 | Glow brightness | `glass-glow.hlsl` | `GLOW_STRENGTH` |
 | Glow spread | `glass-glow.hlsl` | `GLOW_RADIUS` |
 
-The shader file is copied into Terminal's settings folder, so edit that copy. To remove just the glow, delete `experimental.pixelShaderPath` from `settings.json`.
-
-To undo everything, restore the backup over `settings.json`.
+To undo everything, restore your copy of `settings.json`.
 
 ## Credits
 
-Obel Mono is by Typographic Systems, under the SIL Open Font License 1.1. It's downloaded during install and isn't included in this repo.
+Obel Mono is by Typographic Systems, under the SIL Open Font License 1.1. It isn't included in this repo.
